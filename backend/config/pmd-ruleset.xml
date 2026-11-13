@@ -13,5 +13,12 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>PMD quickstart, with Project Pulse's decisions.</description>
     <rule ref="rulesets/java/quickstart.xml">
+        <!-- Keep explicit framework constructors where they document entity or DTO construction.
+             Some empty constructors also preserve access for JPA and deserialization. -->
+        <exclude name="UncommentedEmptyConstructor"/>
+        <exclude name="UnnecessaryConstructor"/>
+        <!-- Current sites use parameterized messages with cheap getters or counts.
+             Review expensive argument computation where logging is added. -->
+        <exclude name="GuardLogStatement"/>
     </rule>
 </ruleset>
