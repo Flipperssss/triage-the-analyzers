@@ -36,15 +36,20 @@ public class AuthService {
         }
         PeerEvaluationUser peerEvaluationUser = principal.getPeerEvaluationUser();
 
+        String roles = peerEvaluationUser.getRoles();
+        if (roles == null) {
+            throw new InsufficientAuthenticationException("Login requires a user with assigned roles.");
+        }
+
         Map<String, Object> loginResultMap = new HashMap<>();
 
-        if (peerEvaluationUser.getRoles().equals("student")) {
+        if ("student".equals(roles)) {
             StudentDto studentDto = this.studentToStudentDtoConverter.convert((Student) peerEvaluationUser);
             // Create a JWT.
             String token = this.jwtProvider.createToken(authentication);
             loginResultMap.put("userInfo", studentDto);
             loginResultMap.put("token", token);
-        } else if (peerEvaluationUser.getRoles().contains("instructor")) {
+        } else if (roles.contains("instructor")) {
             InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert((Instructor) peerEvaluationUser);
             // Create a JWT.
             String token = this.jwtProvider.createToken(authentication);

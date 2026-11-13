@@ -7,4 +7,8 @@
 
      Unlike the baseline, this file may grow, but every entry is a reviewed decision. -->
 <FindBugsFilter>
+  <!-- JPA entities maintain live associations and Spring components retain injected collaborators.
+       DTOs also pass application data by reference, so blanket defensive copies would change those contracts.
+       Review ownership at boundaries where mutable state crosses between callers. -->
+  <Match><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
 </FindBugsFilter>

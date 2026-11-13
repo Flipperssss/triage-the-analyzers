@@ -1,6 +1,7 @@
 package team.projectpulse.security;
 
 import team.projectpulse.user.MyUserPrincipal;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -23,6 +24,10 @@ public class JwtProvider {
     }
 
     public String createToken(Authentication authentication) {
+        if (!(authentication.getPrincipal() instanceof MyUserPrincipal principal)) {
+            throw new InsufficientAuthenticationException("Token creation requires a Project Pulse user.");
+        }
+
         Instant now = Instant.now();
         long expiresIn = 2; // 2 hours
 
@@ -36,7 +41,7 @@ public class JwtProvider {
                 .issuedAt(now)
                 .expiresAt(now.plus(expiresIn, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("userId", ((MyUserPrincipal) authentication.getPrincipal()).getPeerEvaluationUser().getId())
+                .claim("userId", principal.getPeerEvaluationUser().getId())
                 .claim("authorities", authorities)
                 .build();
 
