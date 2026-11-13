@@ -8,6 +8,7 @@ import team.projectpulse.student.converter.StudentToStudentDtoConverter;
 import team.projectpulse.student.dto.StudentDto;
 import team.projectpulse.user.MyUserPrincipal;
 import team.projectpulse.user.PeerEvaluationUser;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,9 @@ public class AuthService {
     }
 
     public Map<String, Object> createLoginInfo(Authentication authentication) {
-        // Create user info.
-        MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
+        if (!(authentication.getPrincipal() instanceof MyUserPrincipal principal)) {
+            throw new InsufficientAuthenticationException("Username and password are required for login.");
+        }
         PeerEvaluationUser peerEvaluationUser = principal.getPeerEvaluationUser();
 
         Map<String, Object> loginResultMap = new HashMap<>();
