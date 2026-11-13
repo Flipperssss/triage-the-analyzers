@@ -1,6 +1,6 @@
 package team.projectpulse.system;
 
-public class StatusCode {
+public final class StatusCode {
 
     private StatusCode() {
         // Constants only.
